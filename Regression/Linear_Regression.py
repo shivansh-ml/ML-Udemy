@@ -36,6 +36,8 @@ print(regressor.intercept_)
 print(regressor.predict([[2]]))
 
 '''
+Eqn--y=b0+b1x
+
 Assumptions of Linear Regression
 1)Linearity--(Linear relation between x and y)
 2)Homoscedasticity--(Equal Variance) //We dont want to see a cone type shape increasing or decreasing cone

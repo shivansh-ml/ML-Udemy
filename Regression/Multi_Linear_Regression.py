@@ -91,9 +91,12 @@ np.set_printoptions(precision=2)## display decimals with only 2 digits after the
 #set_printoptions(...): This is a NumPy function that changes how numbers are displayed when printed (not how they’re stored or calculated).
 print(np.concatenate((y_pred.reshape(len(y_pred),1), y_test.reshape(len(y_test),1)),1))
 '''
+Multiple Linear Regression:
+y = b0 + b1*x1 + b2*x2 + b3*x3 + ... + bn*xn
+Example: y = 1.5 + 2*x1 + 0.5*x2 + 3*x3
+
 axis=0 → join vertically (row-wise)
 axis=1 → join horizontally (column-wise)
 ➡️ So axis=1 means: put one array next to the other
 .reshape(len(y_pred), 1) turns it into a column vector (with 1 column).
-
 '''
