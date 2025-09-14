@@ -37,15 +37,17 @@ print(x)
 
 #Encoding--We are going to convert non-numerical (categorical) data into numbers, because machine learning models work with numbers.
 #for independent variable
+
 '''
 sklearn.compose → Module in scikit-learn that helps apply transformations to specific columns of data.
 ColumnTransformer → A tool that applies transformers (like encoders) only to certain columns.
 from sklearn.preprocessing → Importing from the part of scikit-learn that deals with preprocessing (getting data ready).
 OneHotEncoder → A tool that turns categories into binary (0/1) vectors.
 remainder='passthrough' → Any columns not mentioned should just stay as they are (don't change them).
-np.array(...) → Converting the output to a numpy array (for easier handling).
+np.array(...) → Converting the output to a wnumpy array (for easier handling).
 ct.fit_transform(x) fit: Learns how to transform the data based on your input. ➔ transform: Applies the transformation. ➔ Together: it both learns and applies OneHotEncoding to column 0.
 '''
+
  # Identify the categorical data
 categorical_columns = dataset.select_dtypes(include=['object']).columns
 print("Categorical columns:", categorical_columns)
@@ -54,6 +56,7 @@ from sklearn.preprocessing import OneHotEncoder
 ct = ColumnTransformer(transformers=[('encoder', OneHotEncoder(),[0])], remainder='passthrough')
 x = np.array(ct.fit_transform(x))
 print(x)
+
 #for dependent variable
 
 from sklearn.preprocessing import LabelEncoder
