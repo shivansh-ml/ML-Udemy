@@ -39,6 +39,14 @@ plt.xlabel('Position level')
 plt.ylabel('Salary')
 plt.show()
 
+'''
+[[6.5]] → yes, this is 2D → shape (1,1)
+sc_x.transform([[6.5]]) → still shape (1,1) (scaled)
+regressor.predict(...) → SVR always returns a 1D NumPy array of predictions
+Shape: (1,) (just one number inside an array, like [0.73])
+reshape(-1,1) → converts (1,) → (1,1) (column vector), because the scaler sc_y.inverse_transform() expects 2D input
+'''
+
 ## Visualising the SVR results (for higher resolution and smoother curve)
 X_grid = np.arange(min(sc_x.inverse_transform(x)), max(sc_x.inverse_transform(x)), 0.1)
 X_grid = X_grid.reshape((len(X_grid), 1))

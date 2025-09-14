@@ -10,9 +10,11 @@ This can cause multicollinearity, meaning the model has a hard time predicting c
 5)Score Comparison
 
 p-value means how likely the variable is not useful
+Interpretation of p-value:
+p < 0.05 → The feature is statistically significant → keep it.
+p > 0.05 → The feature is not significant → consider removing i
 
 All-in:throw in all the variable(need to have prior knowledge or if it is necessary or preparing for backward elimination)
-
 
 Backward Elimination:
 Step-1:Select a significance level to stay in the model(e.g. SL or alpha=0.05)
@@ -45,7 +47,6 @@ Step-2:Perform the next step of Backward Elimination(old variable must have P<SL
 Step-4:No new variables can enter and no old variables can exit 
 FIN: YOUR MODEL IS READY
 Eg-You’re building a team — invite good friends, but remove old ones if they stop contributing.
-
 
 All possible model:
 Step-1:Select a criterion of goodness of it(e.g. - Akaike criterion)

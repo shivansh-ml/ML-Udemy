@@ -3,7 +3,8 @@ Polynomial Regression (Degree 3):
 y = b0 + b1*x + b2*x^2 + b3*x^3
 Example: y = 0.5 + 1*x + 0.2*x^2 + 0.05*x^3
 It is also a type of non-linear regression model.
-It is called polynomial-Linear regression.Because it's still linear in terms of the coefficients, even though the data relationship is non-linear.
+It is called polynomial-Linear regression.
+Because it's still linear in terms of the coefficients, even though the data relationship is non-linear.
 The model is linear in its parameters (the b's), which is what matters when fitting the model using methods like Ordinary Least Squares (OLS).
 It is a special case of Multi-Linear Regression
 
