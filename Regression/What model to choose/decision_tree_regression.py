@@ -15,7 +15,12 @@ regressor.fit(X_train, y_train)
 
 y_pred = regressor.predict(X_test)
 np.set_printoptions(precision=2)
+# np.set_printoptions(threshold=np.inf)   # no limit
 print(np.concatenate((y_pred.reshape(len(y_pred),1), y_test.reshape(len(y_test),1)),1))
-
+# df_compare = pd.DataFrame({
+#     "Predicted": y_pred,
+#     "Actual": y_test
+# })
+# print(df_compare.to_string()) 
 from sklearn.metrics import r2_score
 print(r2_score(y_test, y_pred))
