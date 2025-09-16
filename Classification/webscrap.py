@@ -64,7 +64,7 @@ import time
 
 # List of URLs to scrape
 urls_to_scrape = [
-    'https://www.gutenberg.org/cache/epub/345/pg345-images.html'     # Another good example
+    'https://www.hindustantimes.com/india-news/nano-banana-trend-10-tips-and-tricks-to-generate-the-best-pics-using-gemini-ai-101757899785637.html'     # Another good example
     
     # Add other URLs from your list
 ]
@@ -115,5 +115,4 @@ with open('scraped_content.txt', 'a', encoding='utf-8') as file:
             
 # Don't forget to close the browser!
 driver.quit()
-
 print("\nScraping complete. All content has been appended to scraped_content.txt")

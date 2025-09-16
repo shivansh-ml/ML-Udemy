@@ -1,10 +1,5 @@
 import pandas as pd
 import numpy as np
-# import inflect
-# import enchant
-
-# p = inflect.engine()
-# d_enchant = enchant.Dict("en_US")
 
 with open("scraped_content.txt", "r", encoding="utf-8", errors="ignore") as f:
     raw_text = f.read()
@@ -30,7 +25,6 @@ def max_consonant_cluster(word):
             current_len = 0
     return max_len
 
-# Output: dictionary of dictionaries
 d_features = {}
 for word, count in d.items():
     # compute features
@@ -45,13 +39,6 @@ for word, count in d.items():
     max_consonant = max_consonant_cluster(word)
     too_short_or_long = int(length < 2 or length > 20)
 
-    # if length <= 2 or not is_alpha:
-    #     label = 0   # neither
-    # elif ends_ies or (ends_s and not word.endswith("ss")) or ends_es:
-    #     label = 2   # plural
-    # else:
-    #     label = 1   # singular
-
     if has_digit or has_nonalpha or too_short_or_long or max_consonant > 10 or vowel_ratio < 0.2:
         label = 0  # neither
     elif ends_ies or (ends_s and not word.endswith("ss")) or ends_es:
@@ -59,19 +46,6 @@ for word, count in d.items():
     else:
         label = 1  # singular
     
-    # Labeling using enchant + inflect + vowel_ratio + max_consonant
-    # if (not d_enchant.check(word)  # not in dictionary
-    #     or has_digit
-    #     or has_nonalpha
-    #     or too_short_or_long
-    #     or vowel_ratio < 0.2       # low vowel ratio → likely gibberish
-    #     or max_consonant > 7):     # very long consonant cluster → likely gibberish
-    #     label = 0  # neither
-    # elif p.singular_noun(word):
-    #     label = 2  # plural
-    # else:
-    #     label = 1  # singular
-
     d_features[word] = {
         "Length": length,
         "ends_s": ends_s,
@@ -87,35 +61,31 @@ for word, count in d.items():
         "Label": label
     }
 
-# Print results
-# for word, features in d_features.items():
-#     print(word, "->", features)
-
 df = pd.DataFrame(d_features).T
 print(df)
 x = df.drop(columns=["Label"]).values
 y = df["Label"].values
-# print(x[:20])
 
-# Train-test split
+
 from sklearn.model_selection import train_test_split
 x_train, x_test, y_train, y_test = train_test_split(x, y, test_size=0.2, random_state=0)
 
-# Check first 20 rows of x_train
-# print("x_train sample:\n", x_train[:80])
+from sklearn.tree import DecisionTreeRegressor
+regressor = DecisionTreeRegressor(random_state = 0)
+regressor.fit(x_train, y_train)
 
-from sklearn.linear_model import LogisticRegression
-classifier = LogisticRegression(random_state = 0, max_iter=10000)
-classifier.fit(x_train, y_train)
+# Predictions
+y_pred = regressor.predict(x_test)
+y_pred_labels = np.rint(y_pred).astype(int)
+y_pred_labels = np.clip(y_pred_labels, 0, 2)
 
+# Metrics
+from sklearn.metrics import accuracy_score, classification_report, confusion_matrix
+print("Accuracy:", accuracy_score(y_test, y_pred_labels))
+print("\nConfusion Matrix:\n", confusion_matrix(y_test, y_pred_labels))
+print("\nClassification Report:\n", classification_report(y_test, y_pred_labels))
 
-y_pred = classifier.predict(x_test)
-# print(np.concatenate((y_pred.reshape(len(y_pred),1), y_test.reshape(len(y_test),1)),1))
-
-from sklearn.metrics import confusion_matrix, accuracy_score
-print(confusion_matrix(y_test, y_pred))
-print(accuracy_score(y_test, y_pred))
-
+# Interactive prediction
 while True:
     word = input("Enter a word (or type 'no' to exit): ").strip()
     if word.lower() == 'no':
@@ -123,26 +93,32 @@ while True:
         break
 
     length = len(word)
-    is_alpha = int(all(c.isalpha() and c.isascii() for c in word))
+    ends_s = int(word.endswith("s"))
+    ends_es = int(word.endswith("es"))
+    ends_ies = int(word.endswith("ies"))
+    is_alpha = int(word.isalpha())
     has_digit = int(any(c.isdigit() for c in word))
-    has_nonalpha = int(not is_alpha)
-    vowel_ratio = sum(c in "aeiou" for c in word.lower()) / max(1,length)
+    has_nonalpha = int(not word.isalpha())
+    vowel_ratio = sum(c in "aeiou" for c in word.lower()) / max(1, length)
     max_consonant = max_consonant_cluster(word)
     too_short_or_long = int(length < 2 or length > 20)
 
     x_new = [[
         length,
-        int(word.endswith("s")),
-        int(word.endswith("es")),
-        int(word.endswith("ies")),
+        ends_s,
+        ends_es,
+        ends_ies,
+        1,  # Count for unseen word
         is_alpha,
-        1,  # count
         has_digit,
         has_nonalpha,
         vowel_ratio,
         max_consonant,
         too_short_or_long
     ]]
-    pred = classifier.predict(x_new)[0]
+
+    y_new_pred = regressor.predict(x_new)[0]
+    y_new_label = int(np.clip(np.rint(y_new_pred), 0, 2))
+
     label_map = {0: "neither", 1: "singular", 2: "plural"}
-    print(f"The word '{word}' is predicted as: {label_map[pred]}")
+    print(f"The word '{word}' is predicted as: {label_map[y_new_label]} (raw={y_new_pred:.2f})")
