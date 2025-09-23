@@ -15,8 +15,8 @@ sc = StandardScaler()
 x_train = sc.fit_transform(x_train)
 x_test = sc.transform(x_test)
 
-from sklearn.naive_bayes import GaussianNB
-classifer = GaussianNB()
+from sklearn.tree import DecisionTreeClassifier
+classifer = DecisionTreeClassifier(random_state= 0, criterion='entropy')
 classifer.fit(x_train,y_train)
 
 y_pred= classifer.predict(x_test)
@@ -35,7 +35,7 @@ print(accuracy_score(y_test, y_pred))
 from matplotlib.colors import ListedColormap
 
 # Function to plot decision boundary
-def plot_NB(X_set, y_set, title):
+def plot_Decision_Tree(X_set, y_set, title):
     X1, X2 = np.meshgrid(
         np.arange(X_set[:, 0].min() - 1, X_set[:, 0].max() + 1, 0.01),
         np.arange(X_set[:, 1].min() - 1, X_set[:, 1].max() + 1, 0.01)
@@ -52,5 +52,5 @@ def plot_NB(X_set, y_set, title):
     plt.show()
 
 # Plot decision boundaries
-plot_NB(x_train, y_train, 'Naive Bayes (Training set)')
-plot_NB(x_test, y_test, 'Naive Bayes (Test set)')
+plot_Decision_Tree(x_train, y_train, 'Decision Tree (Training set)')
+plot_Decision_Tree(x_test, y_test, 'Decision Tree (Test set)')
